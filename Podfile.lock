@@ -1,0 +1,19 @@
+PODS:
+  - Alamofire (3.4.0)
+  - KeychainSwift (3.0.13)
+  - Nimble (4.0.1)
+  - Quick (0.9.2)
+
+DEPENDENCIES:
+  - Alamofire (~> 3.4)
+  - KeychainSwift (~> 3.0)
+  - Nimble
+  - Quick
+
+SPEC CHECKSUMS:
+  Alamofire: c19a627cefd6a95f840401c49ab1f124e07f54ee
+  KeychainSwift: 3bda518adb1ab386da0a9a1de93b561ee2c9322b
+  Nimble: 0f3c8b8b084cda391209c3c5efbb48bedeeb920a
+  Quick: 18d057bc66451eedd5d1c8dc99ba2a5db6e60226
+
+COCOAPODS: 0.39.0
