@@ -28,6 +28,7 @@ struct KeyserverAPI {
         case URL(urlString: String)
         case Response(resopnseError: ErrorType)
         case NoContent
+        case NoKey
     }
     
     static func publicKeyForQuery(query: String, successCallback: (String -> Void), errorCallback: (ErrorType -> Void)) {
@@ -41,7 +42,13 @@ struct KeyserverAPI {
                 
                 let data = data!
                 if let responseString = String(data: data, encoding: NSUTF8StringEncoding) {
-                    return successCallback(responseString)
+                    
+                    if let keystring = responseString.stringBetweenSubstring(startingWith: "<pre>", endingWith: "</pre") {
+                        
+                        return successCallback(keystring)
+                    } else {
+                        return errorCallback(KeyserverAPIError.NoKey)
+                    }
                 } else {
                     return errorCallback(KeyserverAPIError.NoContent)
                 }
@@ -52,3 +59,12 @@ struct KeyserverAPI {
     }
 }
 
+extension String {
+    func stringBetweenSubstring(startingWith start: String, endingWith end: String) -> String? {
+        if let match = self.rangeOfString("(?<=\(start))[^\(end)]+", options: .RegularExpressionSearch) {
+            return self.substringWithRange(match)
+        }
+        
+        return nil
+    }
+}

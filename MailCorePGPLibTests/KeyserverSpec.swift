@@ -12,9 +12,10 @@ import Nimble
 
 class KeyserverApiSPec: QuickSpec {
     override func spec() {
+        let goodQueryString = "adamcmiel@gmail.com"
+        let badQueryString = "$%&^(*^*^$%*&%$"
+        
         describe("forming URLs") {
-            let goodQueryString = "adamcmiel@gmail.com"
-            let badQueryString = "$%&^(*^*^$%*&%$"
             it("should form a url from a search query") {
                 expect { try KeyserverAPI.searchURL(query: goodQueryString) }.toNot(throwError())
                 
@@ -32,6 +33,24 @@ class KeyserverApiSPec: QuickSpec {
             
             it("should fail with a bad url string") {
                 expect { try KeyserverAPI.searchURL(query: badQueryString) }.to(throwError())
+            }
+        }
+        
+        describe("fetching key data") {
+            it("should fetch the data") {
+                var responseString: String? = nil
+                
+                KeyserverAPI.publicKeyForQuery(goodQueryString, successCallback: { response in
+                    dispatch_async(dispatch_get_main_queue()) {
+                        print(response)
+                        responseString = response
+                    }
+                }, errorCallback: { error in
+                    print(error)
+                    fail()
+                })
+                
+                expect(responseString).toEventuallyNot(beNil(), timeout: 10)
             }
         }
     }
