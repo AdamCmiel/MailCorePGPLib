@@ -37,17 +37,28 @@ class KeyserverApiSPec: QuickSpec {
         }
         
         describe("fetching key data") {
-            it("should fetch the data") {
+            it("should fetch the data with a good query") {
                 var responseString: String? = nil
                 
                 KeyserverAPI.publicKeyForQuery(goodQueryString, successCallback: { response in
-                    dispatch_async(dispatch_get_main_queue()) {
-                        print(response)
-                        responseString = response
-                    }
+                    print(response)
+                    responseString = response
                 }, errorCallback: { error in
                     print(error)
                     fail()
+                })
+                
+                expect(responseString).toEventuallyNot(beNil(), timeout: 10)
+            }
+            
+            it("should error with a poor query") {
+                var responseString: String? = nil
+                
+                KeyserverAPI.publicKeyForQuery(badQueryString, successCallback: { response in
+                    print(response)
+                    fail()
+                }, errorCallback: { error in
+                    responseString = "expected to fail"
                 })
                 
                 expect(responseString).toEventuallyNot(beNil(), timeout: 10)
